@@ -1,0 +1,25 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ block "title" . }}desertBits{{ end }}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/syntax.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="{{ .BaseURL }}">desertBits</a>
+        </div>
+        <div class="links">
+            <a href="https://github.com/lostVkng" target="_blank">Github</a>
+            <a href="https://huggingface.co/lostvkng" target="_blank">HuggingFace</a>
+        </div>
+    </header>
+    <main>
+        {{ block "content" . }}{{ end }}
+    </main>
+</body>
+</html>

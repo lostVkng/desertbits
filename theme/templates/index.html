@@ -1,0 +1,15 @@
+<!-- index.html -->
+{{ template "base.html" . }}
+
+{{ define "title" }}desertBits{{ end }}
+
+{{ define "content" }}
+<div class="posts-list">
+    {{ range .Posts }}
+    <article class="post-header">
+        <h2><a href="/posts/{{ .Slug }}.html">{{ .Title }}</a></h2>
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+    </article>
+    {{ end }}
+</div>
+{{ end }}

@@ -43,7 +43,7 @@ func main() {
 	if err := build(); err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Site built successfully in public/")
+	log.Printf("Site built successfully in docs/")
 
 	// If in dev mode, start the server and file watcher
 	if isDev {
@@ -51,7 +51,7 @@ func main() {
 		go watchChanges()
 
 		log.Printf("Server running at http://localhost:8080")
-		http.Handle("/", http.FileServer(http.Dir("public")))
+		http.Handle("/", http.FileServer(http.Dir("docs")))
 		log.Fatal(http.ListenAndServe(":8080", nil))
 	}
 }
@@ -60,22 +60,22 @@ func main() {
 // create subdirectories, parse all markdown files, generate html files
 func build() error {
 	// Clear output directory if it exists
-	if err := os.RemoveAll("public"); err != nil {
+	if err := os.RemoveAll("docs"); err != nil {
 		return fmt.Errorf("failed to clear output directory: %w", err)
 	}
 
 	// Create output directory
-	if err := os.MkdirAll("public", 0755); err != nil {
+	if err := os.MkdirAll("docs", 0755); err != nil {
 		return fmt.Errorf("failed to create output directory: %w", err)
 	}
 
 	// Copy static assets from theme/static
-	if err := copyDir("theme/static", "public"); err != nil {
+	if err := copyDir("theme/static", "docs"); err != nil {
 		log.Printf("Warning: failed to copy static assets: %v", err)
 	}
 
-	// Copy all assets to /public/assets
-	assetsDestDir := filepath.Join("public", "assets")
+	// Copy all assets to /docs/assets
+	assetsDestDir := filepath.Join("docs", "assets")
 	if err := os.MkdirAll(assetsDestDir, 0755); err != nil {
 		return fmt.Errorf("failed to create assets directory: %w", err)
 	}
@@ -100,7 +100,7 @@ func build() error {
 		chromahtml.WithClasses(true),
 		chromahtml.ClassPrefix("ch-"),
 	)
-	cssFile := filepath.Join("public", "syntax.css")
+	cssFile := filepath.Join("docs", "syntax.css")
 	f, err := os.Create(cssFile)
 	if err != nil {
 		return fmt.Errorf("failed to create syntax.css: %w", err)
@@ -299,7 +299,7 @@ func generateSite(posts []Post) error {
 	}
 
 	// Create posts directory
-	postsDir := filepath.Join("public", "posts")
+	postsDir := filepath.Join("docs", "posts")
 	if err := os.MkdirAll(postsDir, 0755); err != nil {
 		return fmt.Errorf("failed to create posts directory: %w", err)
 	}
@@ -329,7 +329,7 @@ func generateSite(posts []Post) error {
 	}
 
 	// Generate index page
-	indexPath := filepath.Join("public", "index.html")
+	indexPath := filepath.Join("docs", "index.html")
 	indexFile, err := os.Create(indexPath)
 	if err != nil {
 		return fmt.Errorf("failed to create index file: %w", err)

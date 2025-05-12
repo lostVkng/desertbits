@@ -5,3 +5,6 @@ todo.md
 # Go
 bin/
 go.sum
+
+# Obsidian
+.obsidian

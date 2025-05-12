@@ -74,7 +74,7 @@ OWL is a zero shot object detection model. It combines user text prompts with it
 
 Fine-tuning is a technique that starts with a pre-trained model and adjusts it for a specific task. As an example, say I want to detect Lego Stormtroopers, the YOLO models are trained for ~80 classes, but not Stormtroopers. This is a great use case for fine-tuning. We will utilize the models existing knowledge but give it direction to the types of objects to identify. One of the benefits of fine-tuning is it typically requires less training data and is more performant as it effectively creates hot paths to specific objects. 
 
-First, we need to get some training data. I've taken ~50 images of Stormtroopers on my table and annotated each of them. It is usually recommended to have 2k-10k images per class, but let's see how accurate we can get with 50! There are lots of annotation tools, i've commonly used [label-studio](https://github.com/HumanSignal/label-studio) or [make-sense](https://github.com/SkalskiP/make-sense) . Label-studio is nice because you can export in YOLO format which is a nice speedup. 
+First, we need to get some training data. I've taken ~50 images of Stormtroopers on my table and annotated each of them. It is usually recommended to have 2k-10k images per class, but let's see how accurate we can get with 50! There are lots of annotation tools, I've commonly used [label-studio](https://github.com/HumanSignal/label-studio) or [make-sense](https://github.com/SkalskiP/make-sense) . Label-studio is nice because you can export in YOLO format which is a nice speedup. 
 
 ![[od_bounding_boxes.png]](/assets/od_bounding_boxes.png)
 

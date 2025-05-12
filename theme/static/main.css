@@ -58,18 +58,12 @@ a {
     color: var(--text-primary);
 }
 
-a:hover {
-    color: var(--text-bold-highlight);
-}
-
-a:link, a:visited, a:active {
-    text-decoration: none;
-}
-
-a:hover {
+a:link, a:visited, a:active, a:hover {
     text-decoration: underline;
     color: var(--text-bold-highlight);
 }
+
+
 
 /* Header */
 
@@ -98,6 +92,7 @@ header .links {
 
 header .logo a:link, header .logo a:visited, header .logo a:hover, header .logo a:active {
     text-decoration: none;
+    color: var(--text-primary);
 }
 
 header .logo a:hover {
@@ -106,6 +101,7 @@ header .logo a:hover {
 
 header .links a:link, header .links a:visited, header .links a:active {
     text-decoration: none;
+    color: var(--text-primary);
 }
 
 header .links a:hover {
@@ -130,6 +126,7 @@ header .links a:hover {
     justify-content: flex-start;
     gap: 3rem;
     line-height: 1;
+    margin-bottom: 1.5rem;
 }
 
 .post-header h2 {

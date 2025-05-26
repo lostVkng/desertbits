@@ -7,7 +7,7 @@ bin/
 go.sum
 
 # docs holds the built site - github does this
-docs/
+docs/*
 
 # Obsidian
 .obsidian

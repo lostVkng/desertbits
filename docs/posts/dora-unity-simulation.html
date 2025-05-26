@@ -1,0 +1,135 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dora-rs &amp; Unity Simulations</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/syntax.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">desertBits</a>
+        </div>
+        <div class="links">
+            <a href="https://github.com/lostVkng" target="_blank">Github</a>
+            <a href="https://huggingface.co/lostvkng" target="_blank">HuggingFace</a>
+        </div>
+    </header>
+    <main>
+        
+<article class="post">
+    <header>
+        <h1>Dora-rs &amp; Unity Simulations</h1>
+        <time datetime="2025-05-11">May 11, 2025</time>
+    </header>
+    <div class="post-content">
+        <ol>
+<li><a href="#ros2-ecosystem">ROS2 Ecosystem</a></li>
+<li><a href="#dora-rs">Dora-rs</a></li>
+<li><a href="#robotic-simulation">Robotic Simulation</a></li>
+<li><a href="#communicating-between-dora-rs-unity">Communicating between Dora-rs &amp; Unity</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ol>
+
+<p>The robotics industry has been innovating at an incredible pace. Every day we&rsquo;re moving reducing the gap between Science Fiction and Science Fact. From Nvidia &amp; Disney&rsquo;s Star Wars inspired <a href="https://www.techradar.com/computing/artificial-intelligence/nvidia-google-and-disneys-ai-powered-star-wars-robot-is-absolutely-the-droid-ive-been-looking-for" target="_blank">BDX droids</a> to humanoid robots like <a href="https://www.figure.ai/" target="_blank">Figure</a>. To further accelerate the pace of innovation, we need better tooling and easier development.</p>
+
+<p>Most of the Open Source frameworks for robotics were created decades ago and were not designed for modern development workflows. Using them with modern tools is cumbersome and the learning curve is steep. This has led the sophisticated robotics companies to build in house middleware stacks resulting in a large gap between private robotics and the FOSS ecosystem.</p>
+
+<p>This post will explore advances in the open source robotics stack, focusing on middleware and simulation.</p>
+
+<h1 id="ros2-ecosystem">ROS2 Ecosystem</h1>
+
+<p>The Robotic Operating System (ROS) ecosystem is the standard middleware for open source robotics. It brings together a wide range of tooling including a package manager, build system, and set of libraries for interacting with both hardware abstractions and low level device drivers. At the core of ROS is the DDS - Data Distribution Service - which provides a pub/sub messaging model for independent nodes or applications to exchange data. In addition to the core ROS middleware, the ecosystem has a number of apps for working with robots such as Gazeebo for simulation and ROS 2 Navigation for path planning.</p>
+
+<p>While great for its time, the software landscape has evolved. There are better build tools, data messaging options, and development workflows. I&rsquo;ve found the ROS ecosystem to be clunky and my build chain always ends up looking like a spaghetti mess. I&rsquo;ve been wanting a way to more easily bring together nodes/apps that are best suited for the problem at hand. For example allowing a Rust based route planning app to exchange data with a pytorch model for object detection in python then send the data to a low level hardware controller in C or C++. ROS got its node based workflow right, but the build system kills any real attempt at modularity.</p>
+
+<p>To address this challenge, I first wrote my own middleware framework. I leveraged <a href="https://zeromq.org/" target="_blank">ZeroMQ</a> for messaging between the nodes and containerized the nodes using <a href="https://opencontainers.org/" target="_blank">OCI</a> containers to reduce the build complexity. While it was a fun exercise, I still found myself searching for a better solution. Then, last week I came across <a href="https://dora-rs.ai/" target="_blank">Dora-rs</a> and I believe it shows real promise.</p>
+
+<h1 id="dora-rs">Dora-rs</h1>
+
+<p><a href="https://dora-rs.ai/" target="_blank">Dora-rs</a> is a new framework for building modern robotics applications. It&rsquo;s built around a shared memory model that uses <a href="https://arrow.apache.org/" target="_blank">Apache Arrow</a> for zero-copy messaging between nodes. Early benchmarking shows impressive results, such as the 17x latency improvement over ROS2.</p>
+
+<p><img src="/assets/dora_ros_latency.png" alt="Dora-rs Latency" /></p>
+
+<p>Building on modern FOSS technologies such as Arrow which has strong FFI language support, allows Dora-rs to seamlessly integrate with a wide range of languages and tools.</p>
+
+<h1 id="robotic-simulation">Robotic Simulation</h1>
+
+<p>Robotic simulation is a critical tool for robotics developers who need to prototype and train robots. By utilizing a virtual environment, we can simulate the robot&rsquo;s environment and test its behavior in a safe and cost-effective way. But even the best simulations are not a replacement for real-world testing. Simulation is ultimately another tool in a robotics engineer&rsquo;s toolbox.</p>
+
+<p>Benefits of Simulation:</p>
+
+<ol>
+<li>Safety</li>
+<li>Financial Cost</li>
+<li>Time Efficiency</li>
+<li>Difficult to Create Scenarios</li>
+</ol>
+
+<p>Safety is the most important consideration when designing large scale robotic system. We should consider both the individuals testing the system as well as the environment the robot will eventually be operating in. A common use case for robots is to send them to locations that are unsafe for humans to operate such as deap-sea operations or nuclear plant decommissioning. Testing in these environments is dangerous and expensive for humans, not to mention it&rsquo;s difficult to iterate as these environments are not always accessible. Simulation can give us a safe environment for the developers to iterate in, before eventual production deployment.</p>
+
+<p>Cost is another consideration for robotics development. It takes a massive amount of iteration before a robot is production grade. If the robot is lost or destroyed on each test, it is both time and financially expensive to iterate. It&rsquo;ll likely take time to recreate the robot, potentially source materials, and ship it to the test location. From a pure cost POV, simulation can save a considerable amount of time and money to get the robot 80% of the way to production with minimal cash outlay.</p>
+
+<p>From my point of view, the biggest difference between simulation and reality is that time does not need to be linear in a simulation. You can effectively compress time by having multiple copies of the robot operating in the same or different environments to cover near unlimited scenarios.</p>
+
+<p>3 days ago, Sequoia Capital released a <a href="https://www.youtube.com/watch?v=_2NijXqBESI" target="_blank">video with Nvidia&rsquo;s Director of AI</a>, Jim Fan, discussing the future of Embodied AI. I recommend watching it as it&rsquo;s a great take on challenges of Robotics vs non-real world technology such as Large Language Models (LLMs). Nvidia uses simulation that executes at 10,000 times real-time to train their robots. They&rsquo;ve coined this as the Simulation Principle. The team was able to simulate 10 years worth of training in 2 hours to learn walking. Then the were able to transfer zero shot without any fine-tuning to a real world robot and it was able to walk immediately. This demonstrates the power of simulation for building real world working robots at exponentially less time than it would take in the real world.</p>
+
+<p>Nvidia released the <a href="https://build.nvidia.com/nvidia/isaac-gr00t-synthetic-manipulation" target="_blank">GROOT blueprint</a> for synthetic data generation in tandem with <a href="https://developer.nvidia.com/blog/announcing-newton-an-open-source-physics-engine-for-robotics-simulation" target="_blank">Newton</a> their open-source physics engine.</p>
+
+<p><img src="/assets/humanoid_training_isaac_lab.png" alt="Isaac Lab Simulation" /></p>
+
+<p>Fan further explains that recreating near infinite scenarios is too complex and expensive. He demonstrates that using open source video creation models mixed with in house data allows the team to create scenarios through prompt engineering. These generated videos enable us to further compress time and provide the robot with training data that would have otherwise taken decades to create.</p>
+
+<h1 id="communicating-between-dora-rs-unity">Communicating between Dora-rs &amp; Unity</h1>
+
+<p>Now let&rsquo;s demonstrate a simple example connecting Dora-rs to a simulation. I&rsquo;ll be using Unity for the simulation and rendering, but other engines such as Unreal Engine, Godot, or even a custom engine are also possible. Unity also works flawlessly on MacOS which is a big plus for me when i&rsquo;m working on a laptop and don&rsquo;t want to switch to my linux machine.</p>
+
+<p>I&rsquo;ve downloaded one of the free car assets from the Unity Asset Store and written some quick C# code to control the car. The code accepts keyboard arrow key and spacebar input to handle acceleration, reverse, steering, and braking. I&rsquo;ve also included a few public methods to expose car control outside the CarController class. These leverage Coroutines to allow for smooth control of the car. Imagine the robotic operator says drive x distance, since the car can&rsquo;t teleport (yet), it needs to increase acceleration, track the distance, and then apply brakes to slow down.</p>
+
+<p><img src="/assets/unity_sim_1.gif" alt="Car Simulation" /></p>
+
+<p>I included a simple TCP server that Unity will own/host. I thought it made sense for Unity to own it so that the middleware layer sends commands to the simulation in a similar way that it would send commands to nodes owning the robotic hardware. The key logic here is that the TCP server waits for a client to connect, then it calls the CarController methods based on the commands received.</p>
+
+<p>I chose TCP because its a simple real-time two way communication protocol and it&rsquo;s easily supported in Unity. We can wrap the server in a class and use it as a first class object in Unity.</p>
+
+<p>My Dora-rs code is split into two nodes, one is a director that sends commands to the bridge node. The bridge then sends the commands via TCP to the Unity server who then calls the CarController methods.</p>
+
+<p>While both these nodes are written in rust, the architecture of Dora allows nodes to not have to be only Rust/C++ but they can be language agnostic.</p>
+
+<p>Here is the dataflow yaml that defines the dora-rs nodes.</p>
+<pre><code class="language-yaml"><pre tabindex="0" class="ch-chroma"><code><span class="ch-line"><span class="ch-cl"><span class="ch-nt">nodes</span><span class="ch-p">:</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w"></span><span class="ch-w">  </span>- <span class="ch-nt">id</span><span class="ch-p">:</span><span class="ch-w"> </span><span class="ch-l">drive_director</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w">    </span><span class="ch-nt">build</span><span class="ch-p">:</span><span class="ch-w"> </span><span class="ch-l">cargo build -p drive_director</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w">    </span><span class="ch-nt">path</span><span class="ch-p">:</span><span class="ch-w"> </span><span class="ch-l">target/debug/drive_director</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w">    </span><span class="ch-nt">inputs</span><span class="ch-p">:</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w"></span><span class="ch-w">      </span><span class="ch-nt">tick</span><span class="ch-p">:</span><span class="ch-w"> </span><span class="ch-l">dora/timer/millis/100</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w">    </span><span class="ch-nt">outputs</span><span class="ch-p">:</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w"></span><span class="ch-w">      </span>- <span class="ch-l">command</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w">  </span>- <span class="ch-nt">id</span><span class="ch-p">:</span><span class="ch-w"> </span><span class="ch-l">unity_bridge</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w">    </span><span class="ch-nt">build</span><span class="ch-p">:</span><span class="ch-w"> </span><span class="ch-l">cargo build -p unity_bridge</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w">    </span><span class="ch-nt">path</span><span class="ch-p">:</span><span class="ch-w"> </span><span class="ch-l">target/debug/unity_bridge</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w">    </span><span class="ch-nt">inputs</span><span class="ch-p">:</span><span class="ch-w">
+</span></span></span><span class="ch-line"><span class="ch-cl"><span class="ch-w"></span><span class="ch-w">      </span><span class="ch-nt">command</span><span class="ch-p">:</span><span class="ch-w"> </span><span class="ch-l">drive_director/command</span><span class="ch-w">
+</span></span></span></code></pre></code></pre>
+
+<p>I&rsquo;ll submit a pull request to add the TCP example to the dora node-hub for easy access.</p>
+
+<p><img src="/assets/unity_sim_2.gif" alt="Car Simulation with Dora" /></p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>The open source robotics ecosystem is releasing new tools that will enable more people to create innovative robots. Dora-rs is a modern take on node based middleware for the modern robotics engineer. Advancements in zero-shot prompting and simulation enable robots to learn at a faster rate than ever before. The modern robotics stack will be built for speed, agnostic of language and tools, and will enable more people to create robots.</p>
+
+    </div>
+</article>
+
+    </main>
+</body>
+</html>
+
+
+

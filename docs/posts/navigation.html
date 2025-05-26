@@ -1,0 +1,89 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Introducing Navigate</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/syntax.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">desertBits</a>
+        </div>
+        <div class="links">
+            <a href="https://github.com/lostVkng" target="_blank">Github</a>
+            <a href="https://huggingface.co/lostvkng" target="_blank">HuggingFace</a>
+        </div>
+    </header>
+    <main>
+        
+<article class="post">
+    <header>
+        <h1>Introducing Navigate</h1>
+        <time datetime="2025-05-26">May 26, 2025</time>
+    </header>
+    <div class="post-content">
+        <ol>
+<li><a href="#key-concepts">Key Concepts</a></li>
+<li><a href="#innovations-in-the-industry">Innovations in the industry</a></li>
+<li><a href="#introducing-navigate">Introducing Navigate</a></li>
+</ol>
+
+<p>Navigation is one of the first challenges that robotics engineers need to overcome. Humans learn from an early age how to navigate the world. Simple learning lessons such as not running into doors, maintaining a buffer distance from a table, and how to backtrack your steps to a location you were at previously are not known to robots. For robots to operate successfully in the physical world they need to make sense of the environment and plan their movements.</p>
+
+<h1 id="key-concepts">Key Concepts</h1>
+
+<p>Building a navigation path requires knowledge of the current environment and the destination (goal) that you wish to reach. A map is a representation of the world around the robot. Some robots operate only in known environments where the robot has a record of everything in its world. Other robots operate in unknown environments where they must learn about the world around them while operating. Similar to how humans observe new details each time they&rsquo;re in a location.</p>
+
+<p>A common technique in robotics is Simultaneous Localization and Mapping (SLAM) which builds a map of the current environment and estimates the current location using sensor data. SLAM is a chicken and egg problem, to understand your location you need a map but to build a reliable map you need to know your current location. SLAM implementations vary based on the sensors available. Vehicles with LIDAR sensors will use different techniques than vehicles that rely only on cameras.</p>
+
+<p>Once you understand your current position, the next step is planning an optimal path to the goal. Path planners utilize a variety of algorithms to build a route for the robot to follow.</p>
+
+<ol>
+<li>Search based algorithms</li>
+<li>Sampling based algorithms</li>
+</ol>
+
+<p>Search based algorithms (Djikstra, A*) operate on a graph where the relative distance (cost) is known from each square.  Scalability can be a challenge because these algorithms require defined possible nodes. Sampling based algorithms (RRT) explore space randomly which enables much quicker path creation, at the cost of the path potentially not being the most optimal.</p>
+
+<p>Once the optimal route has been identified, planners will often smooth the path using curves. This is so make the path easier to traverse, a jagged path with a lot of turns is likely slower and creates stress on the robot.</p>
+
+<p>Bringing all these concepts together, for a robot to reach its destination the robotic engineer must first understand its current environment. After planning a route, the robot needs to observe and understand its environment along the way to successfully navigate to its goal.</p>
+
+<h1 id="innovations-in-the-industry">Innovations in the industry</h1>
+
+<p>When Oussama Khatib released his 1985 <a href="" title="https://khatib.stanford.edu/publications/pdfs/Khatib_1985.pdf">paper</a> on Artificial Potential Fields, it became foundational literature for decades of robotics research and application. New concepts such as object detection were born.</p>
+
+<p>Progress is made constantly, but the big leaps appear to group together. Looking back at just the last few years. Self driving cars, autonomous drone delivery, and fully robotic shipping facilities are everywhere and expected. Hardware is more accessible today than even just 2 years ago.</p>
+
+<p>The OSS software ecosystem is well timed to catchup to hardware innovation. Most major projects have not received updates in years.</p>
+
+<p>Last Updates from Major Navigation Projects:</p>
+
+<ol>
+<li><a href="" title="https://github.com/raulmur/ORB_SLAM2">ORB_SLAM2</a> - 9 years</li>
+<li><a href="" title="https://github.com/cartographer-project/cartographer">Google Cartographer</a> - Abandoned</li>
+<li><a href="" title="https://github.com/OpenSLAM-org/openslam_gmapping">GMapping</a> - 14 years</li>
+</ol>
+
+<p>The next leap forward will only accelerate robotic adoption and accessibility.</p>
+
+<h1 id="introducing-navigate">Introducing Navigate</h1>
+
+<p>I am announcing the development of the <a href="" title="https://crates.io/crates/navigate">Navigate library</a>. Robotics needs a modern library that is flexible and versatile. Not locked into a singular ecosystem or specific to a type of robot or sensor but usable in a variety of projects.</p>
+
+<p>Today Navigate includes only the dijkstra&rsquo;s algorithm. Over the next few weeks, i&rsquo;ll be porting other industry standard and modern algorithms into Navigate so that it can used for all navigation needs. The goal is not to have it be a specific node in a framework like Dora or ROS but for it to be a core library that can be used across any ecosystem without having to reinvent the wheel.</p>
+
+    </div>
+</article>
+
+    </main>
+</body>
+</html>
+
+
+

@@ -137,10 +137,11 @@ header .links a:hover {
 
 .post-header h2 a:link, .post-header h2 a:visited, .post-header h2 a:active {
     text-decoration: none;
+    color: var(--text-highlight);
 }
 
 .post-header h2 a:hover {
-    color: var(--text-highlight);
+    color: var(--text-bold-highlight);
 }
 
 .post-header time {

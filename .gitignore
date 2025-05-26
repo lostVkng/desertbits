@@ -6,5 +6,8 @@ todo.md
 bin/
 go.sum
 
+# docs holds the built site - github does this
+docs/
+
 # Obsidian
 .obsidian

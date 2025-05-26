@@ -1,5 +1,5 @@
 +++
-title = "Building Robotic Simulations with Dora-rs & Unity"
+title = "Dora-rs & Unity Simulations"
 date = 2025-05-11
 slug = "dora-unity-simulation"
 +++

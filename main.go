@@ -74,13 +74,27 @@ func build() error {
 		log.Printf("Warning: failed to copy static assets: %v", err)
 	}
 
-	// Copy all assets to /docs/assets
+	// Create a symbolic link from docs/assets to the original assets directory
+	// This avoids duplicating the assets
 	assetsDestDir := filepath.Join("docs", "assets")
-	if err := os.MkdirAll(assetsDestDir, 0755); err != nil {
-		return fmt.Errorf("failed to create assets directory: %w", err)
+
+	// Get absolute paths for creating the symlink
+	cwd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to get current working directory: %w", err)
 	}
-	if err := copyDir("assets", assetsDestDir); err != nil {
-		log.Printf("Warning: failed to copy assets: %v", err)
+
+	// Create a relative symlink from docs/assets to ../assets
+	originalAssetsPath := filepath.Join(cwd, "assets")
+	if err := os.Symlink(originalAssetsPath, assetsDestDir); err != nil {
+		// If symlink fails (e.g., on Windows), fall back to copying
+		log.Printf("Warning: failed to create symlink, falling back to copying: %v", err)
+		if err := os.MkdirAll(assetsDestDir, 0755); err != nil {
+			return fmt.Errorf("failed to create assets directory: %w", err)
+		}
+		if err := copyDir("assets", assetsDestDir); err != nil {
+			log.Printf("Warning: failed to copy assets: %v", err)
+		}
 	}
 
 	// Parse and generate posts

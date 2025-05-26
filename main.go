@@ -59,6 +59,28 @@ func main() {
 // Build the blog
 // create subdirectories, parse all markdown files, generate html files
 func build() error {
+
+	// check if assets directory exists in docs
+	assetsDir := filepath.Join("docs", "assets")
+	assetsExists := false
+	if _, err := os.Stat(assetsDir); err == nil {
+		assetsExists = true
+	}
+
+	// Temporarily move assets directory if it exists
+	if assetsExists {
+		tempDir := "assets_temp"
+		if err := os.Rename(assetsDir, tempDir); err != nil {
+			return fmt.Errorf("failed to preserve assets directory: %w", err)
+		}
+		defer func() {
+			// Clean up temp directory if something went wrong
+			if _, err := os.Stat(tempDir); err == nil {
+				os.RemoveAll(tempDir)
+			}
+		}()
+	}
+
 	// Clear output directory if it exists
 	if err := os.RemoveAll("docs"); err != nil {
 		return fmt.Errorf("failed to clear output directory: %w", err)
@@ -74,25 +96,18 @@ func build() error {
 		log.Printf("Warning: failed to copy static assets: %v", err)
 	}
 
-	// Create a symbolic link from docs/assets to the original assets directory
-	// This avoids duplicating the assets
-	assetsDestDir := filepath.Join("docs", "assets")
-
-	// Get absolute paths for creating the symlink
-	cwd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("failed to get current working directory: %w", err)
-	}
-
-	// Create a relative symlink from docs/assets to ../assets
-	originalAssetsPath := filepath.Join(cwd, "assets")
-	if err := os.Symlink(originalAssetsPath, assetsDestDir); err != nil {
-		// If symlink fails (e.g., on Windows), fall back to copying
-		log.Printf("Warning: failed to create symlink, falling back to copying: %v", err)
-		if err := os.MkdirAll(assetsDestDir, 0755); err != nil {
+	// Restore assets directory if it existed, otherwise copy it
+	if assetsExists {
+		// Move the assets back from temp location
+		if err := os.Rename("assets_temp", assetsDir); err != nil {
+			return fmt.Errorf("failed to restore assets directory: %w", err)
+		}
+	} else {
+		// First time build, copy assets to docs/assets
+		if err := os.MkdirAll(assetsDir, 0755); err != nil {
 			return fmt.Errorf("failed to create assets directory: %w", err)
 		}
-		if err := copyDir("assets", assetsDestDir); err != nil {
+		if err := copyDir("assets", assetsDir); err != nil {
 			log.Printf("Warning: failed to copy assets: %v", err)
 		}
 	}

@@ -29,7 +29,7 @@ Bringing all these concepts together, for a robot to reach its destination the r
 
 # Innovations in the industry
 
-When Oussama Khatib released his 1985 [paper]('https://khatib.stanford.edu/publications/pdfs/Khatib_1985.pdf') on Artificial Potential Fields, it became foundational literature for decades of robotics research and application. New concepts such as object detection were born. 
+When Oussama Khatib released his 1985 [paper](https://khatib.stanford.edu/publications/pdfs/Khatib_1985.pdf) on Artificial Potential Fields, it became foundational literature for decades of robotics research and application. New concepts such as object detection were born. 
 
 Progress is made constantly, but the big leaps appear to group together. Looking back at just the last few years. Self driving cars, autonomous drone delivery, and fully robotic shipping facilities are everywhere and expected. Hardware is more accessible today than even just 2 years ago.
 
@@ -37,14 +37,14 @@ The OSS software ecosystem is well timed to catchup to hardware innovation. Most
 
 Last Updates from Major Navigation Projects:
 
-1. [ORB_SLAM2]('https://github.com/raulmur/ORB_SLAM2') - 9 years
-2. [Google Cartographer]('https://github.com/cartographer-project/cartographer') - Abandoned
-3. [GMapping]('https://github.com/OpenSLAM-org/openslam_gmapping') - 14 years
+1. [ORB_SLAM2](https://github.com/raulmur/ORB_SLAM2) - 9 years
+2. [Google Cartographer](https://github.com/cartographer-project/cartographer) - Abandoned
+3. [GMapping](https://github.com/OpenSLAM-org/openslam_gmapping) - 14 years
 
 The next leap forward will only accelerate robotic adoption and accessibility.
 
 # Introducing Navigate
 
-I am announcing the development of the [Navigate library]('https://crates.io/crates/navigate'). Robotics needs a modern library that is flexible and versatile. Not locked into a singular ecosystem or specific to a type of robot or sensor but usable in a variety of projects. 
+I am announcing the development of the [Navigate library](https://crates.io/crates/navigate). Robotics needs a modern library that is flexible and versatile. Not locked into a singular ecosystem or specific to a type of robot or sensor but usable in a variety of projects. 
 
 Today Navigate includes only the dijkstra's algorithm. Over the next few weeks, i'll be porting other industry standard and modern algorithms into Navigate so that it can used for all navigation needs. The goal is not to have it be a specific node in a framework like Dora or ROS but for it to be a core library that can be used across any ecosystem without having to reinvent the wheel.

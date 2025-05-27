@@ -67,6 +67,19 @@ func build() error {
 		assetsExists = true
 	}
 
+	// check if CNAME file exists in docs
+	cnameFile := filepath.Join("docs", "CNAME")
+	cnameExists := false
+	var cnameContent string
+	if _, err := os.Stat(cnameFile); err == nil {
+		cnameExists = true
+		cnameContentBytes, err := os.ReadFile(cnameFile)
+		if err != nil {
+			return fmt.Errorf("failed to read CNAME file: %w", err)
+		}
+		cnameContent = string(cnameContentBytes)
+	}
+
 	// Temporarily move assets directory if it exists
 	if assetsExists {
 		tempDir := "assets_temp"
@@ -89,6 +102,13 @@ func build() error {
 	// Create output directory
 	if err := os.MkdirAll("docs", 0755); err != nil {
 		return fmt.Errorf("failed to create output directory: %w", err)
+	}
+
+	// Restore CNAME file if it existed
+	if cnameExists {
+		if err := os.WriteFile(cnameFile, []byte(cnameContent), 0644); err != nil {
+			return fmt.Errorf("failed to restore CNAME file: %w", err)
+		}
 	}
 
 	// Copy static assets from theme/static
